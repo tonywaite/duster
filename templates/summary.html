@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src='static/Chart.bundle.js'></script>
+</head>
+<body>
+    <h1 style="text-align: center">Particulate Matter Concentration</h1>
+
+
+    <div style="text-align: center" >
+        Time range: &nbsp
+        <a href="{{ url_for('last_hours', hours=24*30*365)}}" style="text-decoration:none; color:black;"> 1 year &nbsp</a>
+        <a href="{{ url_for('last_hours', hours=24*30)}}" style="text-decoration:none; color:black;"> 1 month &nbsp</a>
+        <a href="{{ url_for('last_hours', hours=24)}}" style="text-decoration:none; color:black;"> 24 hours &nbsp</a>
+        <a href="{{ url_for('last_minutes', minutes=60)}}" style="text-decoration:none; color:black;"> 1 hour &nbsp</a>
+        <a href="{{ url_for('last_minutes', minutes=15)}}" style="text-decoration:none; color:black;"> 15 minutes &nbsp</a>
+    </div>
+
+    <h2 style="text-align: center">Last {{timerange}}</h2>
+
+    <div class="chart_atmospheric_container" style="width: 500px; margin-top: 30px; margin-left:auto; margin-right:auto">
+        <p><b>Atmospheric mass concentration</b> - refers to mass concentration value obtained by density of main pollutants of air as equivalent particles - suitable for typical indoor/outdoor environments</p>
+        <canvas id="chart_atmospheric" height="450" width="600"></canvas>
+    </div>
+    <div class="chart_standard_container" style="width: 500px; margin-left:auto; margin-right:auto">
+        <p><b>Factory mass concentration</b> - refers to mass concentration value obtained by density conversion of industrial metal particles - used in workshops/laboratories</p>
+        <canvas id="chart_standard" height="450" width="600"></canvas>
+    </div>
+    <script>
+    var ctx = document.getElementById('chart_standard');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in labels %}
+                     "{{item}}",
+                     {% endfor %}],
+            datasets:
+                [{
+                    label: 'pm1',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm1 factory'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 192, 192)",
+                    fill: false
+                },
+                {
+                    label: 'pm2.5',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm2.5 factory'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 92, 192)",
+                    fill: false
+                },
+                {
+                    label: 'pm10',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm10 factory'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 92, 19)",
+                    fill: false
+                }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+
+    <script>
+    var ctx = document.getElementById('chart_atmospheric');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in labels %}
+                     "{{item}}",
+                     {% endfor %}],
+            datasets:
+                [{
+                    label: 'pm1',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm1 atmospheric'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 192, 192)",
+                    fill: false
+                },
+                {
+                    label: 'pm2.5',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm2.5 atmospheric'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 92, 192)",
+                    fill: false
+                },
+                {
+                    label: 'pm10',
+                    type: 'line',
+                    pointRadius: 0,
+                    data: [{% for item in data['pm10 atmospheric'] %}
+                     "{{item}}",
+                     {% endfor %}],
+                    borderWidth: 2,
+                    borderColor: "rgb(75, 92, 19)",
+                    fill: false
+                }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+</body>
+</html>
